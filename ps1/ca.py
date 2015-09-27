@@ -32,7 +32,18 @@ def printRule(rule):
         str = get_bin(7-i,3) + " -> " + rule[7-i]
         print str 
 
-
+# calculate density of defects
+# defects: two consecutive 1's
+def calDensityDefects(C):
+    defectsCount = 0.0
+    for i in range(0,len(C)):
+        if i == len(C)-1:
+            nextCi = C[0]
+        else:
+            nextCi = C[i+1]
+        if C[i]==1 and nextCi==1:
+            defectsCount = defectsCount + 1
+    return defectsCount/len(C)
 
 
 ##########
@@ -43,10 +54,6 @@ if len(sys.argv) == 1:
     which_rule = 18
 else:
     which_rule = int(sys.argv[1])
-
-
-
-
 
 
 # generate pool of rules
@@ -63,7 +70,7 @@ for rule_index in range(0, 256):
 
 
 # Cell array
-num_c = 71 # make an odd number so there exists a middle point
+num_c = 771 # make an odd number so there exists a middle point
 C = [0]*num_c # init cell array
 
 # initial condition
@@ -74,16 +81,19 @@ if random_C:
 else:
     C[(num_c-1)/2] = 1 # middle point is 1, others are 0, consistent with lecture slides
 
+
 # get rules
 cur_rule = rules[which_rule]
 printRule(cur_rule)
 
 print "Start Cellular Automata simulation..."
-
+maxIter = 20
+densityDefects = [0]*maxIter
 # apply rule to cell array
-for iter in range(1,20):
-    printCellArray(C)
+for iter in range(0,maxIter):
+    #printCellArray(C)
     newC = list(C)
+    densityDefects[iter] = calDensityDefects(C)
     for cellIdx in range(0,num_c):
         # periodic boundary conditions
         if cellIdx == 0:
@@ -102,7 +112,7 @@ for iter in range(1,20):
         newC[cellIdx] = int(cur_rule[neighbors])
     C = list(newC)
 
-
+print densityDefects
 
 #i = len(l) - 1
 #jIndex = (i - 1) % len(l)
