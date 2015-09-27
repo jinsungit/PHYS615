@@ -5,6 +5,7 @@
     Problem Set 1
 """
 
+import random
 import sys
 
 ########
@@ -61,12 +62,17 @@ for rule_index in range(0, 256):
     
 
 
-# cell array
+# Cell array
 num_c = 71 # make an odd number so there exists a middle point
 C = [0]*num_c # init cell array
 
 # initial condition
-C[(num_c-1)/2] = 1 # middle point is 1, others are 0, consistent with lecture slides
+random_C = True
+
+if random_C:
+    C = [int(random.random()+0.5) for i in range(num_c)]
+else:
+    C[(num_c-1)/2] = 1 # middle point is 1, others are 0, consistent with lecture slides
 
 # get rules
 cur_rule = rules[which_rule]
@@ -75,7 +81,7 @@ printRule(cur_rule)
 print "Start Cellular Automata simulation..."
 
 # apply rule to cell array
-for iter in range(1,200000):
+for iter in range(1,20):
     printCellArray(C)
     newC = list(C)
     for cellIdx in range(0,num_c):
