@@ -27,7 +27,6 @@ def printRoad(cars_position, cars_speed, numR):
     R = [-1]*numR
     for c in range(0,len(cars_position)):
         R[cars_position[c]] = cars_speed[c]
-
     s = ""
     for r in R:
         if r == -1:
@@ -36,6 +35,11 @@ def printRoad(cars_position, cars_speed, numR):
             s = s + str(r)
     print s
 
+# calculate average car speed
+def avgCarsSpeed(cars_speed, numC):
+    return sum(cars_speed)/(numC*1.0)
+
+
 ######
 
 # road blocks
@@ -43,7 +47,8 @@ numR = 100
 
 
 # cars
-numC = 9
+pho = 0.09
+numC = int(numR*pho)
 
 # car position array
 cars_position = [0]*numC
@@ -52,17 +57,23 @@ cars_speed    = [0]*numC
 
 
 # init condition
-cars_position = [10, 20, 26, 30, 50, 51, 53, 70, 99]
-cars_speed    = [4, 5, 5, 5, 0, 0, 1, 4, 5]
+#cars_position = [10, 20, 26, 30, 50, 51, 53, 70, 99]
+#cars_speed    = [4, 5, 5, 5, 0, 0, 1, 4, 5]
+cars_position = random.sample(range(0,numR), numC)
+cars_speed    = [0]*numC
+for c in range(0,numC):
+    cars_speed[c] = random.randint(0,5)
+    
 
 # random param
 p = 0.6
-maxIter = 200
+maxIter = 100
 
 vmax = 5
 
+
+
 for iter in range(0, maxIter):
-    printRoad(cars_position, cars_speed, numR)
     new_cars_position = [0]*numC
     # for each car
     for c in range(0,len(cars_position)):
@@ -81,4 +92,8 @@ for iter in range(0, maxIter):
                 cars_speed[c] = cars_speed[c] -1
         # Car motion
         new_cars_position[c] = (cars_position[c] + cars_speed[c]) % numR
+    printRoad(cars_position, cars_speed, numR)
     cars_position = new_cars_position
+
+
+print avgCarsSpeed(cars_speed, numC)
