@@ -43,65 +43,77 @@ def avgCarsSpeed(cars_speed, numC):
 
 ######
 
+# output file
+f = open('result','w')
+
+
 ## params
 # road blocks
 numL = 100
 
 # random param
 p = 0.6
-
 vmax = 5
-
 t0 = 10*numL
 #maxIter = t0+100
 maxIter = 10000
 
+numSimulation = 1
+
 # density loop
 densities = np.linspace(0.025,0.3,30)
-#densities = [0.3]
 
-densityIdx = 0
 
-avgSpeedByDensity = [0]*len(densities)
-for rho in densities:
-    numC = int(numL*rho)
+for simulationIdx in range(0,numSimulation):
+    print 'Simulation '+str(simulationIdx+1)
+    densityIdx = 0
+    avgSpeedByDensity = [0]*len(densities)
+    for rho in densities:
+        numC = int(numL*rho)
 
-    # car position array
-    cars_position = [0]*numC
-    # car speed array
-    cars_speed    = [0]*numC
+        # car position array
+        cars_position = [0]*numC
+        # car speed array
+        cars_speed    = [0]*numC
 
-    # init condition
-    cars_position = random.sample(range(0,numL), numC)
-    # according to paper, init to be zero
-    cars_speed    = [0]*numC 
-    
-    
-    for iter in range(0, maxIter):
-        new_cars_position = [0]*numC
-        # for each car
-        for c in range(0,len(cars_position)):
-            # calculate distance to next car
-            dis2nextCar_val =  dis2nextCar(cars_position, cars_position[c], numL)
-            # Acceleration
-            if cars_speed[c] < vmax and dis2nextCar_val > cars_speed[c]+1:
-                cars_speed[c] = cars_speed[c] + 1
-            # SLowing down
-            if dis2nextCar_val <= cars_speed[c]:
-                cars_speed[c] = dis2nextCar_val -1
-            # Randomization
-            if random.random() <= p:
-                # should not have negative speed
-                if cars_speed[c] >0:
-                    cars_speed[c] = cars_speed[c] -1
-            # Car motion
-            new_cars_position[c] = (cars_position[c] + cars_speed[c]) % numL
-        # print current road
-        if False and iter>=t0:
-            printRoad(cars_position, cars_speed, numL)
-        cars_position = new_cars_position
+        # init condition
+        cars_position = random.sample(range(0,numL), numC)
+        # according to paper, init to be zero
+        cars_speed    = [0]*numC 
+        
+        
+        for iter in range(0, maxIter):
+            new_cars_position = [0]*numC
+            # for each car
+            for c in range(0,len(cars_position)):
+                # calculate distance to next car
+                dis2nextCar_val =  dis2nextCar(cars_position, cars_position[c], numL)
+                # Acceleration
+                if cars_speed[c] < vmax and dis2nextCar_val > cars_speed[c]+1:
+                    cars_speed[c] = cars_speed[c] + 1
+                # SLowing down
+                if dis2nextCar_val <= cars_speed[c]:
+                    cars_speed[c] = dis2nextCar_val -1
+                # Randomization
+                if random.random() <= p:
+                    # should not have negative speed
+                    if cars_speed[c] >0:
+                        cars_speed[c] = cars_speed[c] -1
+                # Car motion
+                new_cars_position[c] = (cars_position[c] + cars_speed[c]) % numL
+            # print current road
+            if False and iter>=t0:
+                printRoad(cars_position, cars_speed, numL)
+            cars_position = new_cars_position
 
-    avgSpeedByDensity[densityIdx] = avgCarsSpeed(cars_speed, numC)
-    densityIdx = densityIdx + 1
+        avgSpeedByDensity[densityIdx] = avgCarsSpeed(cars_speed, numC)
+        densityIdx = densityIdx + 1
 
-print avgSpeedByDensity
+    #print avgSpeedByDensity
+
+    for i in range(0,len(avgSpeedByDensity)):
+        f.write(str(avgSpeedByDensity[i]))
+        f.write(' ')
+    f.write('\n')
+
+f.close()
