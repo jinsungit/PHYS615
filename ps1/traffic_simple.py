@@ -40,12 +40,18 @@ def printRoad(cars_position, cars_speed, numL):
 def avgCarsSpeed(cars_speed, numC):
     return sum(cars_speed)/(numC*1.0)
 
+# calculate speed distribution
+def speedDist(cars_speed):
+    sd = [0]*6
+    for cs in cars_speed:
+        sd[cs] = sd[cs]+1
+    return sd
 
 ######
 
 # output file
-f = open('result','w')
-
+favgSpeed = open('avgSpeed.txt','w')
+fspeedDist = open('speedDist.txt','w')
 
 ## params
 # road blocks
@@ -61,7 +67,8 @@ maxIter = 10000
 numSimulation = 1
 
 # density loop
-densities = np.linspace(0.025,0.3,30)
+#densities = np.linspace(0.025,0.3,30)
+densities = [0.03, 0.08, 0.4, 0.6]
 
 
 for simulationIdx in range(0,numSimulation):
@@ -108,12 +115,20 @@ for simulationIdx in range(0,numSimulation):
 
         avgSpeedByDensity[densityIdx] = avgCarsSpeed(cars_speed, numC)
         densityIdx = densityIdx + 1
+        
+        # print speed distribution for current density
+        sd = speedDist(cars_speed)
+        for i in range(0,len(sd)):
+            fspeedDist.write(str(sd[i]))
+            fspeedDist.write(' ')
+        fspeedDist.write('\n')
+        # density loop end
 
     #print avgSpeedByDensity
-
     for i in range(0,len(avgSpeedByDensity)):
-        f.write(str(avgSpeedByDensity[i]))
-        f.write(' ')
-    f.write('\n')
+        favgSpeed.write(str(avgSpeedByDensity[i]))
+        favgSpeed.write(' ')
+    favgSpeed.write('\n')
 
-f.close()
+favgSpeed.close()
+fspeedDist.close()
