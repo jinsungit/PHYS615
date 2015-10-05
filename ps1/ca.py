@@ -17,9 +17,9 @@ def printCellArray(C):
     str = ""
     for c in C:
         if c == 1:
-            str += "*"
+            str += "1"
         else:
-            str += "."
+            str += "0"
     print str
 
 # get n-bit string, source http://stackoverflow.com/questions/699866/python-int-to-binary
@@ -70,10 +70,10 @@ for rule_index in range(0, 256):
 
 
 # Cell array
-num_c = 771 # make an odd number so there exists a middle point
+num_c = 101 # make an odd number so there exists a middle point
 C = [0]*num_c # init cell array
 
-# initial condition
+##### initial condition
 random_C = True
 
 if random_C:
@@ -81,17 +81,23 @@ if random_C:
 else:
     C[(num_c-1)/2] = 1 # middle point is 1, others are 0, consistent with lecture slides
 
+##### two defects
+C = [0]*num_c
+C[30] = 1
+C[31] = 1
+C[60] = 1
+C[61] = 1
 
 # get rules
 cur_rule = rules[which_rule]
 printRule(cur_rule)
 
 print "Start Cellular Automata simulation..."
-maxIter = 20
+maxIter = 100
 densityDefects = [0]*maxIter
 # apply rule to cell array
 for iter in range(0,maxIter):
-    #printCellArray(C)
+    printCellArray(C)
     newC = list(C)
     densityDefects[iter] = calDensityDefects(C)
     for cellIdx in range(0,num_c):
@@ -108,10 +114,9 @@ for iter in range(0,maxIter):
         
         neighbors_str = str(leftCell) + str(C[cellIdx]) + str(rightCell)
         neighbors = int(neighbors_str,2)
-        #print neighbors_str + ": " + str(neighbors)
         newC[cellIdx] = int(cur_rule[neighbors])
     C = list(newC)
-
+printCellArray(C)
 print densityDefects
 
 #i = len(l) - 1

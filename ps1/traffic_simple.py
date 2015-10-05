@@ -64,11 +64,11 @@ t0 = 10*numL
 #maxIter = t0+100
 maxIter = 10000
 
-numSimulation = 1
+numSimulation = 100
 
 # density loop
-#densities = np.linspace(0.025,0.3,30)
-densities = [0.03, 0.08, 0.4, 0.6]
+densities = np.linspace(0.025,0.3,30)
+#densities = [0.03, 0.08, 0.4, 0.6]
 
 
 for simulationIdx in range(0,numSimulation):
@@ -117,11 +117,11 @@ for simulationIdx in range(0,numSimulation):
         densityIdx = densityIdx + 1
         
         # print speed distribution for current density
-        sd = speedDist(cars_speed)
-        for i in range(0,len(sd)):
-            fspeedDist.write(str(sd[i]))
-            fspeedDist.write(' ')
-        fspeedDist.write('\n')
+        #sd = speedDist(cars_speed)
+        #for i in range(0,len(sd)):
+            #fspeedDist.write(str(sd[i]))
+            #fspeedDist.write(' ')
+        #fspeedDist.write('\n')
         # density loop end
 
     #print avgSpeedByDensity
