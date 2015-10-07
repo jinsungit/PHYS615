@@ -1,16 +1,14 @@
 """
     One dimensional Cellular Automata
+    This script can generate any one of the 256 rules of a 3-neighbor 1D CA
     Jin Sun
-    for PHYS615
-    Problem Set 1
+    PHYS615, Problem Set 1
 """
-
 import random
 import sys
 
 ########
 ## Helper function
-########
 
 # print cell array in a nice form
 def printCellArray(C):
@@ -45,7 +43,6 @@ def calDensityDefects(C):
             defectsCount = defectsCount + 1
     return defectsCount/len(C)
 
-
 ##########
 
 # arguments
@@ -54,7 +51,6 @@ if len(sys.argv) == 1:
     which_rule = 18
 else:
     which_rule = int(sys.argv[1])
-
 
 # generate pool of rules
 # Each rule is a dictionary (hash table) that maps neighborhood coding to 0/1
@@ -66,11 +62,9 @@ for rule_index in range(0, 256):
     for i in range(0,8):
         # each key to the rule is a decimal number converted from binary string
         rules[rule_index][7-i] = neighbors[i]
-    
-
 
 # Cell array
-num_c = 101 # make an odd number so there exists a middle point
+num_c = 60000 
 C = [0]*num_c # init cell array
 
 ##### initial condition
@@ -82,22 +76,23 @@ else:
     C[(num_c-1)/2] = 1 # middle point is 1, others are 0, consistent with lecture slides
 
 ##### two defects
-C = [0]*num_c
-C[30] = 1
-C[31] = 1
-C[60] = 1
-C[61] = 1
+#C = [0]*num_c
+#C[30] = 1
+#C[31] = 1
+#C[60] = 1
+#C[61] = 1
 
 # get rules
 cur_rule = rules[which_rule]
 printRule(cur_rule)
 
 print "Start Cellular Automata simulation..."
-maxIter = 100
+maxIter = 2000
 densityDefects = [0]*maxIter
 # apply rule to cell array
 for iter in range(0,maxIter):
-    printCellArray(C)
+    print 'Iter ' + str(iter)
+    #printCellArray(C)
     newC = list(C)
     densityDefects[iter] = calDensityDefects(C)
     for cellIdx in range(0,num_c):
@@ -116,13 +111,7 @@ for iter in range(0,maxIter):
         neighbors = int(neighbors_str,2)
         newC[cellIdx] = int(cur_rule[neighbors])
     C = list(newC)
+print '---------------------'
 printCellArray(C)
 print densityDefects
-
-#i = len(l) - 1
-#jIndex = (i - 1) % len(l)
-#kIndex = (i + 1) % len(l)
-
-#j = l[jIndex]
-#k = l[kIndex]
 

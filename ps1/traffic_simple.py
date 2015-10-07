@@ -1,13 +1,13 @@
 """
-    Traffic simulation
+    Traffic simulation 
     Jin Sun
+    PHYS615, Problem Set 1
 """
-
 import random
 import numpy as np
+
 ######
 # Helper function
-
 
 # find distance to next car
 # cars is car array, i is current car position
@@ -48,7 +48,6 @@ def speedDist(cars_speed):
     return sd
 
 ######
-
 # output file
 favgSpeed = open('avgSpeed.txt','w')
 fspeedDist = open('speedDist.txt','w')
@@ -61,7 +60,6 @@ numL = 100
 p = 0.6
 vmax = 5
 t0 = 10*numL
-#maxIter = t0+100
 maxIter = 10000
 
 numSimulation = 100
@@ -87,7 +85,6 @@ for simulationIdx in range(0,numSimulation):
         cars_position = random.sample(range(0,numL), numC)
         # according to paper, init to be zero
         cars_speed    = [0]*numC 
-        
         
         for iter in range(0, maxIter):
             new_cars_position = [0]*numC
@@ -124,7 +121,6 @@ for simulationIdx in range(0,numSimulation):
         #fspeedDist.write('\n')
         # density loop end
 
-    #print avgSpeedByDensity
     for i in range(0,len(avgSpeedByDensity)):
         favgSpeed.write(str(avgSpeedByDensity[i]))
         favgSpeed.write(' ')
