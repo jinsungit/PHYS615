@@ -114,11 +114,11 @@ for simulationIdx in range(0,numSimulation):
         densityIdx = densityIdx + 1
         
         # print speed distribution for current density
-        #sd = speedDist(cars_speed)
-        #for i in range(0,len(sd)):
-            #fspeedDist.write(str(sd[i]))
-            #fspeedDist.write(' ')
-        #fspeedDist.write('\n')
+        sd = speedDist(cars_speed)
+        for i in range(0,len(sd)):
+            fspeedDist.write(str(sd[i]))
+            fspeedDist.write(' ')
+        fspeedDist.write('\n')
         # density loop end
 
     for i in range(0,len(avgSpeedByDensity)):
