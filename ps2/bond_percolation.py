@@ -1,5 +1,5 @@
 """
-    Percolation
+    Bond Percolation
     Jin Sun
     PHYS615, Problem Set 2
 """
@@ -85,12 +85,12 @@ for i in range(M):
     # get bond index
     bondIdx = bondOrder[i]
     # convert to sub
-    if i < height * (width-1):# horizontal bonds
-        ri_start,ci_start = ind2sub(i, width-1)
+    if bondIdx < height * (width-1):# horizontal bonds
+        ri_start,ci_start = ind2sub(bondIdx, width-1)
         ri_end = ri_start
         ci_end = ci_start+1
     else:# vertical bonds
-        ri_start,ci_start = ind2sub(i-height*(width-1), width)
+        ri_start,ci_start = ind2sub(bondIdx-height*(width-1), width)
         ri_end = ri_start+1
         ci_end = ci_start
      
@@ -98,12 +98,12 @@ for i in range(M):
     if G[ri_start][ci_start] != G[ri_end][ci_end]:
         # relabel the smaller cluster
         if G_size[G[ri_start][ci_start]] < G_size[G[ri_end][ci_end]]:
-            print "G_size[G["+str(ri_start)+"]["+str(ci_start)+"] < G_size[G["+str(ri_end)+"]["+str(ci_end)+"]]: "+str(G_size[G[ri_start][ci_start]])+" vs "+str(G_size[G[ri_end][ci_end]])
+            #print "G_size[G["+str(ri_start)+"]["+str(ci_start)+"] < G_size[G["+str(ri_end)+"]["+str(ci_end)+"]]: "+str(G_size[G[ri_start][ci_start]])+" vs "+str(G_size[G[ri_end][ci_end]])
             oldLabel = G[ri_start][ci_start]
             newLabel = G[ri_end][ci_end]
             relabelG(G, ri_start, ci_start, oldLabel, newLabel)
         else:
-            print "G_size[G["+str(ri_start)+"]["+str(ci_start)+"] >= G_size[G["+str(ri_end)+"]["+str(ci_end)+"]]: "+str(G_size[G[ri_start][ci_start]])+" vs "+str(G_size[G[ri_end][ci_end]])
+            #print "G_size[G["+str(ri_start)+"]["+str(ci_start)+"] >= G_size[G["+str(ri_end)+"]["+str(ci_end)+"]]: "+str(G_size[G[ri_start][ci_start]])+" vs "+str(G_size[G[ri_end][ci_end]])
             oldLabel = G[ri_end][ci_end]
             newLabel = G[ri_start][ci_start]
             relabelG(G, ri_end, ci_end, oldLabel, newLabel)
