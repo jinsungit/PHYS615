@@ -48,8 +48,12 @@ def printGrid(G):
 ######
 # main procedure
 
+# do we need visualization?
+verbose = False
+
+
 # a square grid
-N = 25
+N = 2500
 
 width = int(math.sqrt(N))
 height = width
@@ -67,21 +71,27 @@ G_size = [0]*N
 siteOrder = range(N)
 random.shuffle(siteOrder)
 
-siteOrder = [0, 14, 15, 16, 9, 3, 23, 13, 10, 1, 5, 19, 2, 18, 11, 8, 6, 7, 20, 17, 12, 4, 21, 22, 24]
+if verbose:
+    print "Site order is:"
+    print siteOrder
 
+# size of largest component vs occupation probability
+lc_vs_p = [0]*N
 
-print "Site order is:"
-print siteOrder
+# cluster size distribution of different occupation probability
+p02 = G_size[:]
+p06 = G_size[:]
+p09 = G_size[:]
 
 # adding sites one by one
 for i in range(N):
-    printGrid(G)
+    if verbose:    printGrid(G)
     # get site index
     siteIdx = siteOrder[i]
     # convert to sub
     ri,ci = ind2sub(siteIdx, width)
     
-    print "Inserting " + str(siteIdx) + " at [" + str(ri) + "," + str(ci) + "]"
+    if verbose:     print "Inserting " + str(siteIdx) + " at [" + str(ri) + "," + str(ci) + "]"
     
     G[ri][ci] = siteIdx
     G_size[G[ri][ci]] = 1 # each new site is of its own cluster with size 1
@@ -99,16 +109,49 @@ for i in range(N):
             if G[ri_start][ci_start] != G[ri_end][ci_end] and G[ri_end][ci_end] != -1:
                 # relabel the smaller cluster
                 if G_size[G[ri_start][ci_start]] < G_size[G[ri_end][ci_end]]:
-                    print "G_size[G["+str(ri_start)+"]["+str(ci_start)+"] < G_size[G["+str(ri_end)+"]["+str(ci_end)+"]]: "+str(G_size[G[ri_start][ci_start]])+" vs "+str(G_size[G[ri_end][ci_end]])
+                    if verbose:     print "G_size[G["+str(ri_start)+"]["+str(ci_start)+"] < G_size[G["+str(ri_end)+"]["+str(ci_end)+"]]: "+str(G_size[G[ri_start][ci_start]])+" vs "+str(G_size[G[ri_end][ci_end]])
                     oldLabel = G[ri_start][ci_start]
                     newLabel = G[ri_end][ci_end]
                     relabelG(G, ri_start, ci_start, oldLabel, newLabel)
                 else:
-                    print "G_size[G["+str(ri_start)+"]["+str(ci_start)+"] >= G_size[G["+str(ri_end)+"]["+str(ci_end)+"]]: "+str(G_size[G[ri_start][ci_start]])+" vs "+str(G_size[G[ri_end][ci_end]])
+                    if verbose:     print "G_size[G["+str(ri_start)+"]["+str(ci_start)+"] >= G_size[G["+str(ri_end)+"]["+str(ci_end)+"]]: "+str(G_size[G[ri_start][ci_start]])+" vs "+str(G_size[G[ri_end][ci_end]])
                     oldLabel = G[ri_end][ci_end]
                     newLabel = G[ri_start][ci_start]
                     relabelG(G, ri_end, ci_end, oldLabel, newLabel)
                 
                 G_size[newLabel] = G_size[newLabel] + G_size[oldLabel]
                 G_size[oldLabel] = 0
-printGrid(G)
+    lc_vs_p[i] = max(G_size)
+
+    if i==499:
+        p02 = G_size[:]
+    if i==1499:
+        p06 = G_size[:]
+    if i==2249:
+        p09 = G_size[:]
+if verbose:     printGrid(G)
+
+f = open("site_percolation_result.txt",'w')
+f.write("Largest component size vs occupation probability\n")
+for item in lc_vs_p:
+    f.write(str(item)+" ")
+f.write("\n")
+
+f.write("p = 0.2, cluster size distribution\n")
+for item in p02:
+    f.write(str(item)+" ")
+f.write("\n")
+
+f.write("p = 0.6, cluster size distribution\n")
+for item in p06:
+    f.write(str(item)+" ")
+f.write("\n")
+
+f.write("p = 0.9, cluster size distribution\n")
+for item in p09:
+    f.write(str(item)+" ")
+f.write("\n")
+
+f.close()
+
+print "All done"
