@@ -71,18 +71,19 @@ def fillSite(G, G_size, width, siteIdx, fillType):
     ri_start = ri
     ci_start = ci
 
+    # if spark
+    if fillType == "spark":
+        oldLabel = G[ri_start][ci_start]
+        newLabel = -1
+        relabelG(G, ri_start, ci_start, oldLabel, newLabel)
+        if verbose:     print "Burned down " + str(G_size[oldLabel]) + " sites."
+        G_size[oldLabel] = 0 # all burned down
+        return
+
     for ni in range(len(neighbors)):
         if neighbors[ni][0] >=0 and neighbors[ni][0] <height and neighbors[ni][1] >=0 and neighbors[ni][1] <width:
             ri_end = neighbors[ni][0]
             ci_end = neighbors[ni][1]
-
-            # if spark
-            if fillType == "spark" and G[ri_start][ci_start] == G[ri_end][ci_end] and G[ri_end][ci_end] != -1:
-                oldLabel = G[ri_start][ci_start]
-                newLabel = -1
-                relabelG(G, ri_start, ci_start, oldLabel, newLabel)
-                G_size[oldLabel] = 0 # all burned down
-                continue
             
             # if bond connects two real clusters
             if fillType == "normal" and G[ri_start][ci_start] != G[ri_end][ci_end] and G[ri_end][ci_end] != -1:
@@ -133,7 +134,7 @@ d_vs_t = []
 
 
 t = 0
-maxT = 20
+maxT = 1000
 # adding sites by time step
 while t < maxT:
     if verbose:    printGrid(G)
