@@ -7,6 +7,7 @@ import random
 import sys
 import math
 
+
 ######
 # helper functions
 
@@ -50,21 +51,20 @@ def fillSite(G, G_size, width, siteIdx, fillType):
     # convert to sub
     ri,ci = ind2sub(siteIdx, width)
 
-    if verbose:     
-        if fillType != "spark":# normal filling
-            if verbose: print "Inserting " + str(siteIdx) + " at [" + str(ri) + "," + str(ci) + "]" 
-            # if already occupied
-            if G[ri][ci] != -1:
-                if verbose: print "Already occupied, do nothing!"
-                return
-            G[ri][ci] = t
-            G_size[t] = 1 # each new site is of its own cluster with size 1
-        else:# filling with spark
-            if verbose: print "Spark at [" +str(ri) + "," + str(ci) + "]"
-            if G[ri][ci] == -1:
-                if verbose: print "But hit an unoccupied site, nothing happend!"
-                return
-            
+    if fillType != "spark":# normal filling
+        if verbose: print "Inserting " + str(siteIdx) + " at [" + str(ri) + "," + str(ci) + "]" 
+        # if already occupied
+        if G[ri][ci] != -1:
+            if verbose: print "Already occupied, do nothing!"
+            return
+        G[ri][ci] = t
+        G_size[t] = 1 # each new site is of its own cluster with size 1
+    else:# filling with spark
+        if verbose: print "Spark at [" +str(ri) + "," + str(ci) + "]"
+        if G[ri][ci] == -1:
+            if verbose: print "But hit an unoccupied site, nothing happend!"
+            return
+        
     
     # check if any of four neibhors sites already occupied, if so, add a bond between them. Repeat procedure in bond percolation.
     neighbors = [[ri-1,ci],[ri+1,ci],[ri,ci-1],[ri,ci+1]]
@@ -108,11 +108,11 @@ def fillSite(G, G_size, width, siteIdx, fillType):
 # main procedure
 
 # do we need visualization?
-#verbose = False
-verbose = True
+verbose = False
+#verbose = True
 
 # a square grid
-N = 25
+N = 2500
 
 width = int(math.sqrt(N))
 height = width
@@ -134,7 +134,7 @@ d_vs_t = []
 
 
 t = 0
-maxT = 1000
+maxT = 20000
 # adding sites by time step
 while t < maxT:
     if verbose:    printGrid(G)
@@ -143,7 +143,7 @@ while t < maxT:
     
     fillSite(G, G_size, width, siteIdx, "normal")
 
-    if t % 5 == 0:
+    if t % 100 == 0:
         # randomly pick a spark index
         siteIdx = random.randint(0, N-1)
         fillSite(G, G_size, width, siteIdx, "spark")
@@ -160,16 +160,11 @@ while t < maxT:
     t = t+1
 if verbose:     printGrid(G)
 
-#f = open("site_percolation_result.txt",'w')
-#f.write("Largest component size vs occupation probability\n")
-#for item in lc_vs_p:
-    #f.write(str(item)+" ")
-#f.write("\n")
+f = open("SOC_percolation_result.txt",'w')
+f.write("Density vs time\n")
+for item in d_vs_t:
+    f.write(str(item)+" ")
+f.write("\n")
 
-#f.write("p = 0.2, cluster size distribution\n")
-#for item in p02:
-    #f.write(str(item)+" ")
-#f.write("\n")
-#f.close()
 
 print "All done"
