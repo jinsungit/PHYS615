@@ -123,11 +123,11 @@ for i in range(N):
                 G_size[oldLabel] = 0
     lc_vs_p[i] = max(G_size)
 
-    if i==499:
+    if i==int(0.2*N):
         p02 = G_size[:]
-    if i==1499:
+    if i==int(0.6*N):
         p06 = G_size[:]
-    if i==2249:
+    if i==int(0.9*N):
         p09 = G_size[:]
 if verbose:     printGrid(G)
 
