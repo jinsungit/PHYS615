@@ -56,14 +56,14 @@ def fillSite(G, G_size, width, siteIdx, fillType):
         # if already occupied
         if G[ri][ci] != -1:
             if verbose: print "Already occupied, do nothing!"
-            return
+            return "filling"
         G[ri][ci] = t
         G_size[t] = 1 # each new site is of its own cluster with size 1
     else:# filling with spark
         if verbose: print "Spark at [" +str(ri) + "," + str(ci) + "]"
         if G[ri][ci] == -1:
             if verbose: print "But hit an unoccupied site, nothing happend!"
-            return
+            return "miss_hit"
         
     
     # check if any of four neibhors sites already occupied, if so, add a bond between them. Repeat procedure in bond percolation.
@@ -78,7 +78,7 @@ def fillSite(G, G_size, width, siteIdx, fillType):
         relabelG(G, ri_start, ci_start, oldLabel, newLabel)
         if verbose:     print "Burned down " + str(G_size[oldLabel]) + " sites."
         G_size[oldLabel] = 0 # all burned down
-        return
+        return "hit"
 
     for ni in range(len(neighbors)):
         if neighbors[ni][0] >=0 and neighbors[ni][0] <height and neighbors[ni][1] >=0 and neighbors[ni][1] <width:
@@ -129,14 +129,19 @@ G_size = {}
 # occupied density vs time
 d_vs_t = []
 
-# cluster size distribution of different occupation probability
+# density vs time after one spark
+d_vs_t_spark = []
 
+# cluster size distribution of different occupation probability
 
 
 t = 0
 maxT = 20000
 # adding sites by time step
 while t < maxT:
+    
+    sparkValid = False
+    
     if verbose:    printGrid(G)
     # randomly pick a site index
     siteIdx = random.randint(0, N-1)
@@ -146,7 +151,9 @@ while t < maxT:
     if t % 100 == 0:
         # randomly pick a spark index
         siteIdx = random.randint(0, N-1)
-        fillSite(G, G_size, width, siteIdx, "spark")
+        sparkRes = fillSite(G, G_size, width, siteIdx, "spark")
+        if sparkRes == "hit":
+            sparkValid = True
 
 
     # calculate density
@@ -155,16 +162,25 @@ while t < maxT:
         if g != -1:
             density = density + G_size[g]
     d_vs_t.append(density/N)
+    
+    # if just hit a spark
+    if sparkValid:  d_vs_t_spark.append(density/N)
     if verbose:     print "density: " + str(density/N)
+
 
     t = t+1
 if verbose:     printGrid(G)
 
-f = open("SOC_percolation_result.txt",'w')
-f.write("Density vs time\n")
+f = open("SOC_percolation_d_vs_t.txt",'w')
+#f.write("Density vs time\n")
 for item in d_vs_t:
     f.write(str(item)+" ")
 f.write("\n")
 
+
+f = open("SOC_percolation_d_vs_t_spark.txt",'w')
+for item in d_vs_t_spark:
+    f.write(str(item)+" ")
+f.write("\n")
 
 print "All done"
