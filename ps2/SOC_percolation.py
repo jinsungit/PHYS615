@@ -1,5 +1,5 @@
 """
-    Self-organized Site Percolation
+    Self-organized Percolation
     Jin Sun
     PHYS615, Problem Set 2
 """
@@ -59,7 +59,6 @@ def sumG_size(G_size):
 def fillSite(G, G_size, width, siteIdx, fillType):
     # convert to sub
     ri,ci = ind2sub(siteIdx, width)
-
     if fillType != "spark":# normal filling
         if verbose: print "Inserting " + str(siteIdx) + " at [" + str(ri) + "," + str(ci) + "]" 
         # if already occupied
@@ -73,7 +72,6 @@ def fillSite(G, G_size, width, siteIdx, fillType):
         if G[ri][ci] == -1:
             if verbose: print "But hit an unoccupied site, nothing happend!"
             return "nothing"
-        
     
     # check if any of four neibhors sites already occupied, if so, add a bond between them. Repeat procedure in bond percolation.
     neighbors = [[ri-1,ci],[ri+1,ci],[ri,ci-1],[ri,ci+1]]
@@ -111,18 +109,14 @@ def fillSite(G, G_size, width, siteIdx, fillType):
                 G_size[newLabel] = G_size[newLabel] + G_size[oldLabel]
                 G_size[oldLabel] = 0
 
-
-
 ######
 # main procedure
 
 # do we need visualization?
 verbose = False
-#verbose = True
 
 # a square grid
 N = 2500
-
 width = int(math.sqrt(N))
 height = width
 
@@ -138,25 +132,19 @@ for iter in range(1):
     #grid, contains cluster label, init to be all empty
     G = [[-1 for i in range(width)] for j in range(height)]
 
-
     # size hash table
     # hash table is used because each time when we add a site, the site label is determined by time step
     G_size = {}
-
-
     # occupied density vs time
     d_vs_t = []
-
     # yield, sum of sizes of unburned clusters
     theyield = []
-
 
     t = 0
     maxT = 20000
     transientT = 1000 # when do we start to collect data
     # adding sites by time step
     while t < maxT:
-        
         sparkHit = False
         
         if verbose:    printGrid(G)
@@ -183,8 +171,7 @@ for iter in range(1):
             d_vs_t.append(density/N)
             if verbose:     print "density: " + str(density/N)
  
-            # NOTE:
-            # G_size is a dictionary, iterator will only get the key, not value.
+            # NOTE: G_size is a dictionary, iterator will only get the key, not value.
 
             # randomly get a snapshot of cluster sizes distribution
             if random.random() < 0.01:
@@ -201,7 +188,6 @@ for iter in range(1):
 
                 # store yield, unburned cluster sizes
                 theyield.append(G_total_before - G_total_after)
-            
         t = t+1
     if verbose:     printGrid(G)
 
@@ -217,6 +203,5 @@ f_density_vs_time.close()
 f_cluster_sizes_random.close()
 f_cluster_sizes_afterSpark.close()
 f_yield.close()
-
 
 print "All done"

@@ -51,35 +51,26 @@ def printGrid(G):
 # do we need visualization?
 verbose = False
 
-
 # a square grid
 N = 2500
-
 width = int(math.sqrt(N))
 height = width
 
-
 f_lc_vs_p = open("site_percolation_result_lc_vs_p.txt",'w')
-#f.write("Largest component size vs occupation probability\n")
-
 f_p2 = open("site_percolation_result_p2.txt",'a')
 f_p6 = open("site_percolation_result_p6.txt",'a')
 f_p9 = open("site_percolation_result_p9.txt",'a')
 
 for iter in range(1000):
-
     print("Iter "+str(iter)+"\n")
-
 
     #grid, contains cluster label, init to be all empty
     G = [[-1 for i in range(width)] for j in range(height)]
-
 
     # size array
     G_size = [0]*N
 
     # need an ordering of filling sites
-
     # random permutation
     siteOrder = range(N)
     random.shuffle(siteOrder)
