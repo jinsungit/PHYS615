@@ -7,10 +7,10 @@ import random
 import sys
 
 
-# function to calculate edge betweenness, from a selected root
+# function to perform BFS, from a selected root
 # edges: network stored in edge list format
 # r:     root node 
-def calBetweenness(edges, r):
+def bfs(edges, r):
     N = len(edges)
     d = [-1]*N # all nodes are unassigned by default
     d[r] = 0 # init root node to have distance 0
@@ -43,3 +43,40 @@ def calBetweenness(edges, r):
     
     return Np, parents, d
 
+
+# calculate betweenness
+def calBetweenness(edges):
+    N = len(edges)
+    bl = [[0 for x in range(N)] for x in range(N)]
+    # do bfs for every node
+    for r in range(N):
+        Np, parents, d = bfs(edges, r)
+        Bk = [1]*N        # betweenness for each node
+
+        # start from the node furthest from r
+        sortedIdx = sorted(range(len(d)), key=lambda k: d[k]) 
+
+        for ki in range(N-1,0,-1):
+            k = sortedIdx[ki] # k is the current furthest node index
+            # modify k's parents' Bk
+            for p in parents[k]:
+                amount = Bk[k] * Np[p]/(Np[k]*1.0)
+                Bk[p] = Bk[p] + amount
+                bl[k][p] = bl[k][p] + amount
+                bl[p][k] = bl[p][k] + amount
+    return bl
+
+
+
+if False:
+    # simple test
+    edges = {}
+    edges[0] = [1,2]
+    edges[1] = [0,3]
+    edges[2] = [0,3]
+    edges[3] = [1,2,4]
+    edges[4] = [3]
+
+    Np,parents,d = bfs(edges,0)
+    bl = calBetweenness(edges)
+    print(bl)

@@ -6,7 +6,7 @@
 import random
 import sys
 import math
-
+import calBetweenness as cb
 
 ######
 # helper functions
@@ -91,5 +91,9 @@ for n in range(N):
                     
     
 visGraph(edges, N)
+
+bl = cb.calBetweenness(edges)
+
+print(bl)
 
 print "All done"
