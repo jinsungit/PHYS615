@@ -49,7 +49,7 @@ def inlist(thelist, element):
 # main procedure
 
 # number of nodes
-N = 20
+N = 5
 # store network in edge list
 edges = {}
 for n in range(N):
@@ -65,6 +65,9 @@ for n in range(N):
 
 #visGraph(edges, N)
 
+# calculate betweenness before rewiring
+bl = cb.calBetweenness(edges)
+print(bl)
 
 # rewiring network
 
@@ -90,7 +93,7 @@ for n in range(N):
                     validRewiring = True
                     
     
-visGraph(edges, N)
+# visGraph(edges, N)
 
 bl = cb.calBetweenness(edges)
 
