@@ -27,6 +27,9 @@ def bfs(edges, r):
         u = Q.pop(0) # get first element
         # for each vertex reachable by u
         for v in edges[u]:
+            # if not valid
+            if v==-1:
+                continue
             # if the node is unassigned
             if d[v] == -1:
                 # assign v's distance
@@ -49,19 +52,15 @@ def bfs(edges, r):
 # [INPUT]   edges: network in edge list format
 # [OUTPUT]     bl: betweenness for each edge, stored in NxN matrix
 def calBetweenness(edges):
-    bl = calBetweenness(edges,len(edges))
-    return bl
-
-def calBetweenness(edges, whichr):
     N = len(edges)
     bl = [[0 for x in range(N)] for x in range(N)]
     # do bfs for every node
-    for r in range(whichr):
+    for r in range(N):
         Np, parents, d = bfs(edges, r)
         Bk = [1]*N        # betweenness for each node
 
         # start from the node furthest from r
-        sortedIdx = sorted(range(len(d)), key=lambda k: d[k]) 
+        sortedIdx = sorted(range(len(d)), key=lambda k: d[k])
 
         for ki in range(N-1,0,-1):
             k = sortedIdx[ki] # k is the current furthest node index
@@ -72,6 +71,7 @@ def calBetweenness(edges, whichr):
                 bl[k][p] = bl[k][p] + amount
                 bl[p][k] = bl[p][k] + amount
     return bl
+
 
 
 

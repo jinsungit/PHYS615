@@ -51,7 +51,7 @@ def inlist(thelist, element):
 # main procedure
 
 # number of nodes
-N = 500
+N = 10
 # store network in edge list
 edges = {}
 for n in range(N):
@@ -72,7 +72,7 @@ bl = cb.calBetweenness(edges)
 
 
 # rewiring probability
-p = 0.05
+p = 0.1
 print('rewiring probability: ' + str(p))
 
 # store short cut edges that has been rewired
@@ -98,7 +98,7 @@ for n in range(N):
                     # and newnode's edge list
                     edges[newnode].append(n)
                     # also need to change oldnode's edge list
-                    edges[oldnode][e+2] = 0
+                    edges[oldnode][e+2] = -1
                     
                     validRewiring = True
                     shortCutEdges[n][newnode] = 1
