@@ -93,10 +93,16 @@ for n in range(N):
                 newnode = random.randint(0, N-1)
                 # make sure no duplicate edges
                 if newnode != n and not inlist(edges[n], newnode):
+                    # need to change current node n's edge list
                     edges[n][e] = newnode
-                    # dont need to change oldnode's edge list, because we only do one side edges
+                    # and newnode's edge list
+                    edges[newnode].append(n)
+                    # also need to change oldnode's edge list
+                    edges[oldnode][e+2] = 0
+                    
                     validRewiring = True
                     shortCutEdges[n][newnode] = 1
+                    shortCutEdges[newnode][n] = 1
                     shortCutCounts = shortCutCounts + 1
                     
     

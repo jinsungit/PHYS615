@@ -48,11 +48,14 @@ def bfs(edges, r):
 # calculate betweenness
 # [INPUT]   edges: network in edge list format
 # [OUTPUT]     bl: betweenness for each edge, stored in NxN matrix
+def calBetweenness(edges):
+    bl = calBetweenness(edges,len(edges))
+    return bl
+
 def calBetweenness(edges, whichr):
     N = len(edges)
     bl = [[0 for x in range(N)] for x in range(N)]
     # do bfs for every node
-    #for r in range(N):
     for r in range(whichr):
         Np, parents, d = bfs(edges, r)
         Bk = [1]*N        # betweenness for each node
