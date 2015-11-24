@@ -6,6 +6,8 @@
 import random
 import sys
 import math
+import numpy
+
 import calBetweenness as cb
 
 ######
@@ -49,7 +51,7 @@ def inlist(thelist, element):
 # main procedure
 
 # number of nodes
-N = 5
+N = 500
 # store network in edge list
 edges = {}
 for n in range(N):
@@ -67,12 +69,15 @@ for n in range(N):
 
 # calculate betweenness before rewiring
 bl = cb.calBetweenness(edges)
-print(bl)
 
-# rewiring network
 
 # rewiring probability
-p = 0.1
+p = 0.05
+print('rewiring probability: ' + str(p))
+
+# store short cut edges that has been rewired
+shortCutEdges = [[0 for x in range(N)] for x in range(N)]
+shortCutCounts = 0
 
 # for each node
 for n in range(N):
@@ -91,12 +96,54 @@ for n in range(N):
                     edges[n][e] = newnode
                     # dont need to change oldnode's edge list, because we only do one side edges
                     validRewiring = True
+                    shortCutEdges[n][newnode] = 1
+                    shortCutCounts = shortCutCounts + 1
                     
     
 # visGraph(edges, N)
 
 bl = cb.calBetweenness(edges)
 
-print(bl)
+print('total number of short cuts: '+str(shortCutCounts))
+
+# calculate avg betweenness of short cut and non short cut edges
+# only check one edge once
+B_shortcut = []
+B_nonshortcut = []
+for i in range(N):
+    # for j in range(i+1,N):
+    for j in range(N):
+        if shortCutEdges[i][j] == 1:
+            B_shortcut.append(bl[i][j])
+        else:
+            B_nonshortcut.append(bl[i][j])
+
+
+avgB = numpy.array([B_shortcut])
+avgB_mean = numpy.mean(avgB)
+avgB_std  = numpy.std(avgB, ddof=1)
+print('avg betweenness of short-cut edges: ' + str(avgB_mean) + ' +- ' + str(
+    avgB_std) + ', from ' + str(len(B_shortcut)) + ' edges.')
+
+
+avgB = numpy.array([B_nonshortcut])
+avgB_mean = numpy.mean(avgB)
+avgB_std  = numpy.std(avgB, ddof=1)
+print('avg betweenness of non-short-cut edges:' + str(avgB_mean) + ' += ' +
+      str(avgB_std) + ', from ' + str(len(B_nonshortcut)) + ' edges. ')
+
+# avgB_f = open('avgB_shortcut.txt','w')
+# for b in B_shortcut:
+#     avgB_f.write(str(b)+' ')
+# avgB_f.write('\n')
+# avgB_f.close()
+#
+# avgB_f = open('avgB_nonshortcut.txt','w')
+# for b in B_nonshortcut:
+#     avgB_f.write(str(b)+' ')
+# avgB_f.write('\n')
+# avgB_f.close()
+
+
 
 print "All done"

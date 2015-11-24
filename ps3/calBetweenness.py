@@ -8,8 +8,9 @@ import sys
 
 
 # function to perform BFS, from a selected root
-# edges: network stored in edge list format
-# r:     root node 
+# [INPUT]  edges: network stored in edge list format
+#              r:     root node 
+# [OUTPUT] Np, parents, d as in lecture example 
 def bfs(edges, r):
     N = len(edges)
     d = [-1]*N # all nodes are unassigned by default
@@ -45,6 +46,8 @@ def bfs(edges, r):
 
 
 # calculate betweenness
+# [INPUT]   edges: network in edge list format
+# [OUTPUT]     bl: betweenness for each edge, stored in NxN matrix
 def calBetweenness(edges):
     N = len(edges)
     bl = [[0 for x in range(N)] for x in range(N)]
